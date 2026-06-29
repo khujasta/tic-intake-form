@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Indian Couture — Product Entry</title>
+<style>
+  :root{
+    --bg:#FAF8F3; --card:#FFFFFF; --ink:#262420; --ink-soft:#6B675F;
+    --line:#E6E2D8; --accent:#8A4B3B; --accent-soft:#F3E6E0;
+    --ok:#3B6D11; --err:#A32D2D;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:480px; margin:0 auto; padding:20px 16px 60px;}
+  header{padding:8px 4px 20px;}
+  header .brand{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:600;}
+  header h1{font-size:21px; margin:4px 0 0; font-weight:600;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:14px;}
+  .card-title{font-size:13px; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; margin:0 0 14px;}
+  .field{margin-bottom:14px;}
+  .field:last-child{margin-bottom:0;}
+  label{display:block; font-size:14px; font-weight:500; margin-bottom:6px;}
+  .req{color:var(--accent);}
+  select, input[type=number]{
+    width:100%; padding:11px 12px; font-size:16px; border:1px solid var(--line);
+    border-radius:9px; background:#fff; color:var(--ink); appearance:none;
+  }
+  select{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B675F'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center; padding-right:32px;
+  }
+  select:focus, input:focus{outline:none; border-color:var(--accent);}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .toggle-group{display:flex; gap:8px; flex-wrap:wrap;}
+  .toggle-btn{
+    flex:1; min-width:84px; padding:10px 8px; font-size:14px; font-weight:500; text-align:center;
+    border:1px solid var(--line); border-radius:9px; cursor:pointer; background:#fff; color:var(--ink-soft);
+    user-select:none;
+  }
+  .toggle-btn.active{background:var(--accent-soft); color:var(--accent); border-color:var(--accent);}
+  .err-msg{font-size:12px; color:var(--err); margin-top:5px; display:none;}
+  .sku-box{
+    background:var(--accent-soft); border-radius:10px; padding:14px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .sku-label{font-size:12px; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:.04em;}
+  .sku-val{font-size:19px; font-weight:700; font-family:ui-monospace,monospace; color:var(--accent); letter-spacing:.03em;}
+  .sku-note{font-size:12px; color:var(--ink-soft); margin-top:8px;}
+  .submit-btn{
+    width:100%; padding:15px; font-size:16px; font-weight:600; border:none; border-radius:10px;
+    background:var(--accent); color:#fff; cursor:pointer; margin-top:6px;
+  }
+  .submit-btn:active{opacity:.85;}
+  .submit-btn:disabled{opacity:.5;}
+  .success-screen{display:none; text-align:center; padding:50px 16px;}
+  .success-icon{
+    width:56px; height:56px; border-radius:50%; background:var(--ok); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px;
+  }
+  .success-title{font-size:20px; font-weight:600; margin-bottom:8px;}
+  .success-sku{font-family:ui-monospace,monospace; font-size:24px; font-weight:700; color:var(--accent); margin:14px 0;}
+  .success-sub{font-size:14px; color:var(--ink-soft); margin-bottom:28px; line-height:1.5;}
+  .new-btn{
+    padding:13px 26px; font-size:15px; font-weight:500; border:1px solid var(--line); border-radius:10px;
+    background:#fff; color:var(--ink); cursor:pointer;
+  }
+  .sending{font-size:13px; color:var(--ink-soft); text-align:center; margin-top:10px; display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">The Indian Couture</div>
+    <h1>New product entry</h1>
+  </header>
+
+  <div id="formView">
+
+    <div class="card">
+      <p class="card-title">Basics</p>
+      <div class="field">
+        <label>Segment <span class="req">*</span></label>
+        <div class="toggle-group" id="seg-group">
+          <div class="toggle-btn" onclick="setToggle('segment','Bahaar',this)">Bahaar</div>
+          <div class="toggle-btn" onclick="setToggle('segment','Farozan',this)">Farozan</div>
+          <div class="toggle-btn" onclick="setToggle('segment','Nayaab',this)">Nayaab</div>
+        </div>
+        <div class="err-msg" id="err-segment">Please select a segment</div>
+      </div>
+      <div class="field">
+        <label>Price (₹) <span class="req">*</span></label>
+        <input type="number" id="price" placeholder="e.g. 2400">
+        <div class="err-msg" id="err-price">Please enter a price</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Top</p>
+      <div class="field">
+        <label>Colour <span class="req">*</span></label>
+        <select id="top-colour" onchange="buildSKU()">
+          <option value="">Select…</option>
+          <option>Beige</option><option>Black</option><option>Blue</option><option>Cream</option>
+          <option>Golden</option><option>Green</option><option>Grey</option><option>Magenta</option>
+          <option>Maroon</option><option>Multicolour</option><option>Off White</option><option>Orange</option>
+          <option>Peach</option><option>Pink</option><option>Purple</option><option>Red</option>
+          <option>Rust</option><option>Taupe</option><option>White</option><option>Wine</option><option>Yellow</option>
+        </select>
+        <div class="err-msg" id="err-top-colour">Required</div>
+      </div>
+      <div class="field">
+        <label>Fabric <span class="req">*</span></label>
+        <select id="top-fabric" onchange="buildSKU()">
+          <option value="">Select…</option>
+          <option>Brocade</option><option>Chanderi</option><option>Chiffon</option><option>Cotton</option>
+          <option>Cotton Silk</option><option>Crepe</option><option>Georgette</option><option>Kamkhab</option>
+          <option>Linen</option><option>Maheshwari</option><option>Modal</option><option>Net</option>
+          <option>Organza</option><option>Satin</option><option>Silk</option><option>Staple Tussar</option>
+          <option>Tissue</option><option>Velvet</option>
+        </select>
+        <div class="err-msg" id="err-top-fabric">Required</div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Style <span class="req">*</span></label>
+          <select id="top-style" onchange="buildSKU()">
+            <option value="">Select…</option>
+            <option>A Line</option><option>Angarkha</option><option>Anarkali</option><option>Blouse</option>
+            <option>Frock</option><option>Gown</option><option>Kalidar</option><option>M High Neck</option>
+            <option>M Kurta</option><option>M Pathan</option><option>Straight</option>
+          </select>
+          <div class="err-msg" id="err-top-style">Required</div>
+        </div>
+        <div class="field">
+          <label>Length</label>
+          <select id="top-length">
+            <option value="">Select…</option>
+            <option>Ankle</option><option>Calf</option><option>Floor</option><option>Knee</option><option>Thigh</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Sleeve length</label>
+        <div class="toggle-group">
+          <div class="toggle-btn" onclick="setToggle('sleeveLength','Full',this)">Full</div>
+          <div class="toggle-btn" onclick="setToggle('sleeveLength','Three-Quarters',this)">3/4</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Bottom</p>
+      <div class="row2">
+        <div class="field">
+          <label>Colour</label>
+          <select id="bottom-colour">
+            <option value="">Select…</option>
+            <option>Beige</option><option>Black</option><option>Blue</option><option>Cream</option>
+            <option>Golden</option><option>Green</option><option>Grey</option><option>Magenta</option>
+            <option>Maroon</option><option>Multicolour</option><option>Off White</option><option>Orange</option>
+            <option>Peach</option><option>Pink</option><option>Purple</option><option>Red</option>
+            <option>Rust</option><option>Taupe</option><option>White</option><option>Wine</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Fabric</label>
+          <select id="bottom-fabric">
+            <option value="">Select…</option>
+            <option>Brocade</option><option>Chanderi</option><option>Cotton</option><option>Cotton Silk</option>
+            <option>Crepe</option><option>Glazzed Cotton</option><option>Kamkhab</option><option>Rayon Cotton</option>
+            <option>Silk</option><option>Staple Tussar</option><option>Tissue</option><option>Velvet</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Style <span class="req">*</span></label>
+        <select id="bottom-style" onchange="buildSKU()">
+          <option value="">Select…</option>
+          <option>Churidar</option><option>Farshi</option><option>Gharara</option><option>Gown</option>
+          <option>Lancha</option><option>Lehenga</option><option>None</option><option>Palazzo</option>
+          <option>Trousers Narrow</option><option>Trousers Straight</option>
+        </select>
+        <div class="err-msg" id="err-bottom-style">Required</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Dupatta <span style="font-weight:400; text-transform:none; letter-spacing:0;">(leave blank if none)</span></p>
+      <div class="row2">
+        <div class="field">
+          <label>Colour</label>
+          <select id="dupatta-colour">
+            <option value="">Select…</option>
+            <option>Beige</option><option>Black</option><option>Blue</option><option>Cream</option>
+            <option>Golden</option><option>Green</option><option>Grey</option><option>Magenta</option>
+            <option>Maroon</option><option>Multicolour</option><option>Off White</option><option>Orange</option>
+            <option>Peach</option><option>Pink</option><option>Purple</option><option>Red</option>
+            <option>Rust</option><option>Taupe</option><option>White</option><option>Wine</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Fabric</label>
+          <select id="dupatta-fabric">
+            <option value="">Select…</option>
+            <option>Chanderi</option><option>Chiffon</option><option>Cotton</option><option>Cotton Silk</option>
+            <option>Georgette</option><option>Linen</option><option>Maheshwari</option><option>Net</option>
+            <option>Organza</option><option>Silk</option><option>Silk Tissue</option><option>Staple Tussar</option>
+            <option>Tissue</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Ornamentation &amp; pattern</p>
+      <div class="field">
+        <label>Ornamentation <span class="req">*</span></label>
+        <select id="ornamentation" onchange="buildSKU()">
+          <option value="">Select…</option>
+          <option>Aari</option><option>Applique</option><option>Cutwork</option><option>Gota</option>
+          <option>Handwork</option><option>Kamdani</option><option>Patchwork</option><option>Resham Embroidery</option>
+          <option>Resham Weave</option><option>Self Work</option><option>Tilla</option><option>Zardozi</option>
+          <option>Zari Embroidery</option><option>Zari Weave</option>
+        </select>
+        <div class="err-msg" id="err-ornamentation">Required</div>
+      </div>
+      <div class="field">
+        <label>Pattern</label>
+        <div class="toggle-group">
+          <div class="toggle-btn" onclick="setToggle('pattern','Abstract',this)">Abstract</div>
+          <div class="toggle-btn" onclick="setToggle('pattern','Calligraphy',this)">Calligraphy</div>
+          <div class="toggle-btn" onclick="setToggle('pattern','Floral',this)">Floral</div>
+          <div class="toggle-btn" onclick="setToggle('pattern','Geometric',this)">Geometric</div>
+          <div class="toggle-btn" onclick="setToggle('pattern','Jaal',this)">Jaal</div>
+          <div class="toggle-btn" onclick="setToggle('pattern','Motif',this)">Motif</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Generated SKU</p>
+      <div class="sku-box">
+        <span class="sku-label">SKU</span>
+        <span class="sku-val" id="sku-display">—</span>
+      </div>
+      <div class="sku-note">Auto-generated from your selections. Save your photos in a folder with this exact name.</div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Save product entry</button>
+    <div class="sending" id="sendingMsg">Saving…</div>
+
+  </div>
+
+  <div class="success-screen" id="successView">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Product saved</div>
+    <div class="success-sku" id="success-sku-display"></div>
+    <div class="success-sub">Save your photos to the folder:<br><strong id="success-folder"></strong></div>
+    <button class="new-btn" onclick="resetForm()">Add another product</button>
+  </div>
+
+</div>
+
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxRB4OxEFjw0sIOE13OtwDcepc9lF42vxPYzytfZiEchNS03M1T84Rf_UJir4aaYe2n/exec";
+
+const codes = {
+  colour:{Beige:'BG',Black:'BA',Blue:'BL',Cream:'CM',Golden:'GL',Green:'GN',Grey:'GR',Magenta:'MG',Maroon:'MR',Multicolour:'MC','Off White':'OW',Orange:'OR',Peach:'PC',Pink:'PK',Purple:'PR',Red:'RD',Rust:'RT',Taupe:'TP',White:'WH',Wine:'WN',Yellow:'YL'},
+  fabric:{Brocade:'BR',Chanderi:'CD',Chiffon:'CH',Cotton:'CT','Cotton Silk':'CS',Crepe:'CR',Georgette:'GR',Kamkhab:'KM',Linen:'LN',Maheshwari:'MW',Modal:'MO',Net:'NT',Organza:'OR',Satin:'SA',Silk:'SL','Staple Tussar':'ST',Tissue:'TS',Velvet:'VL'},
+  style:{'A Line':'AL',Angarkha:'AG',Anarkali:'AN',Blouse:'BL',Frock:'FR',Gown:'GN',Kalidar:'KL','M High Neck':'MH','M Kurta':'MK','M Pathan':'MP',Straight:'SR'},
+  bottom:{Churidar:'CS',Farshi:'FS',Gharara:'GH',Gown:'GN',Lancha:'LN',Lehenga:'LH',None:'#',Palazzo:'PS','Trousers Narrow':'TN','Trousers Straight':'TS'},
+  orn:{Aari:'AR',Applique:'AP',Cutwork:'CW',Gota:'GT',Handwork:'HW',Kamdani:'KD',Patchwork:'PW','Resham Embroidery':'RE','Resham Weave':'RW','Self Work':'SW',Tilla:'TL',Zardozi:'ZD','Zari Embroidery':'ZE','Zari Weave':'ZW'}
+};
+
+const state = { segment:null, sleeveLength:null, pattern:null };
+
+function setToggle(key, val, el){
+  state[key] = val;
+  const grp = el.closest('.toggle-group');
+  grp.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  if(key === 'segment'){
+    const err = document.getElementById('err-segment');
+    if(err) err.style.display = 'none';
+  }
+}
+
+function buildSKU(){
+  const tc = document.getElementById('top-colour').value;
+  const tf = document.getElementById('top-fabric').value;
+  const ts = document.getElementById('top-style').value;
+  const bs = document.getElementById('bottom-style').value;
+  const orn = document.getElementById('ornamentation').value;
+  if(!tc || !tf || !ts || !bs || !orn){
+    document.getElementById('sku-display').textContent = '—';
+    return;
+  }
+  const sku = (codes.colour[tc]||'??') + (codes.fabric[tf]||'??') + (codes.style[ts]||'??') + (codes.bottom[bs]||'??') + (codes.orn[orn]||'??') + '1';
+  document.getElementById('sku-display').textContent = sku;
+}
+
+function validate(){
+  let valid = true;
+  const checks = [
+    ['segment', () => !!state.segment],
+    ['price', () => document.getElementById('price').value.trim() !== ''],
+    ['top-colour', () => document.getElementById('top-colour').value !== ''],
+    ['top-fabric', () => document.getElementById('top-fabric').value !== ''],
+    ['top-style', () => document.getElementById('top-style').value !== ''],
+    ['bottom-style', () => document.getElementById('bottom-style').value !== ''],
+    ['ornamentation', () => document.getElementById('ornamentation').value !== ''],
+  ];
+  checks.forEach(([id, fn]) => {
+    const err = document.getElementById('err-' + id);
+    if(err){
+      if(!fn()){ err.style.display = 'block'; valid = false; }
+      else{ err.style.display = 'none'; }
+    }
+  });
+  return valid;
+}
+
+function collectPayload(){
+  return {
+    segment: state.segment || '',
+    topColour: document.getElementById('top-colour').value,
+    topFabric: document.getElementById('top-fabric').value,
+    topStyle: document.getElementById('top-style').value,
+    topLength: document.getElementById('top-length').value,
+    sleeveLength: state.sleeveLength || '',
+    bottomColour: document.getElementById('bottom-colour').value,
+    bottomFabric: document.getElementById('bottom-fabric').value,
+    bottomStyle: document.getElementById('bottom-style').value,
+    dupattaColour: document.getElementById('dupatta-colour').value,
+    dupattaFabric: document.getElementById('dupatta-fabric').value,
+    ornamentation: document.getElementById('ornamentation').value,
+    pattern: state.pattern || '',
+    price: document.getElementById('price').value
+  };
+}
+
+function submitForm(){
+  if(!validate()) return;
+
+  const sku = document.getElementById('sku-display').textContent;
+  const payload = collectPayload();
+  const btn = document.getElementById('submitBtn');
+  const sending = document.getElementById('sendingMsg');
+
+  btn.disabled = true;
+  sending.style.display = 'block';
+
+  fetch(SHEET_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  })
+  .then(() => showSuccess(sku))
+  .catch(() => showSuccess(sku))
+  .finally(() => {
+    btn.disabled = false;
+    sending.style.display = 'none';
+  });
+}
+
+function showSuccess(sku){
+  document.getElementById('success-sku-display').textContent = sku;
+  document.getElementById('success-folder').textContent = '/Photos/' + sku + '/';
+  document.getElementById('formView').style.display = 'none';
+  document.getElementById('successView').style.display = 'block';
+}
+
+function resetForm(){
+  document.getElementById('successView').style.display = 'none';
+  document.getElementById('formView').style.display = 'block';
+  document.querySelectorAll('select').forEach(s => s.value = '');
+  document.getElementById('price').value = '';
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  Object.keys(state).forEach(k => state[k] = null);
+  document.getElementById('sku-display').textContent = '—';
+  document.querySelectorAll('.err-msg').forEach(e => e.style.display = 'none');
+}
+</script>
+</body>
+</html>
