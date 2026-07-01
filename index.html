@@ -262,6 +262,7 @@
     <div class="success-title">Product saved</div>
     <div class="success-sku" id="success-sku-display"></div>
     <div class="success-sub">Save your photos to the folder:<br><strong id="success-folder"></strong></div>
+    <div class="success-sub" id="success-foldercode"></div>
     <button class="new-btn" onclick="resetForm()">Add another product</button>
   </div>
 
@@ -345,7 +346,7 @@ function collectPayload(){
   };
 }
 
-function submitForm(){
+async function submitForm(){
   if(!validate()) return;
 
   const sku = document.getElementById('sku-display').textContent;
@@ -356,10 +357,17 @@ function submitForm(){
   btn.disabled = true;
   sending.style.display = 'block';
 
-  fetch(SHEET_URL, {
-    method: 'POST',
-    body: JSON.stringify(payload)
-  })
+let folderCode = '';
+try {
+    const res = await fetch(SHEET_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+    folderCode = result.folderCode || '';
+} catch (err) {
+    folderCode = '';
+}
   .then(() => showSuccess(sku))
   .catch(() => showSuccess(sku))
   .finally(() => {
@@ -371,6 +379,7 @@ function submitForm(){
 function showSuccess(sku){
   document.getElementById('success-sku-display').textContent = sku;
   document.getElementById('success-folder').textContent = '/Photos/' + sku + '/';
+  document.getElementById('success-foldercode').textContent = folderCode ? ('✅ Folder code: ' + folderCode) : '';
   document.getElementById('formView').style.display = 'none';
   document.getElementById('successView').style.display = 'block';
 }
