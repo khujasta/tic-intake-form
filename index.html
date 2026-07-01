@@ -357,26 +357,24 @@ async function submitForm(){
   btn.disabled = true;
   sending.style.display = 'block';
 
-let folderCode = '';
-try {
+  let folderCode = '';
+  try {
     const res = await fetch(SHEET_URL, {
       method: 'POST',
       body: JSON.stringify(payload)
     });
     const result = await res.json();
     folderCode = result.folderCode || '';
-} catch (err) {
+  } catch (err) {
     folderCode = '';
-}
-  .then(() => showSuccess(sku))
-  .catch(() => showSuccess(sku))
-  .finally(() => {
-    btn.disabled = false;
-    sending.style.display = 'none';
-  });
+  }
+
+  btn.disabled = false;
+  sending.style.display = 'none';
+  showSuccess(sku, folderCode);
 }
 
-function showSuccess(sku){
+function showSuccess(sku, folderCode){
   document.getElementById('success-sku-display').textContent = sku;
   document.getElementById('success-folder').textContent = '/Photos/' + sku + '/';
   document.getElementById('success-foldercode').textContent = folderCode ? ('✅ Folder code: ' + folderCode) : '';
