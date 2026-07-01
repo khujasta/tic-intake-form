@@ -44,13 +44,6 @@
   }
   .toggle-btn.active{background:var(--accent-soft); color:var(--accent); border-color:var(--accent);}
   .err-msg{font-size:12px; color:var(--err); margin-top:5px; display:none;}
-  .sku-box{
-    background:var(--accent-soft); border-radius:10px; padding:14px 16px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .sku-label{font-size:12px; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:.04em;}
-  .sku-val{font-size:19px; font-weight:700; font-family:ui-monospace,monospace; color:var(--accent); letter-spacing:.03em;}
-  .sku-note{font-size:12px; color:var(--ink-soft); margin-top:8px;}
   .submit-btn{
     width:100%; padding:15px; font-size:16px; font-weight:600; border:none; border-radius:10px;
     background:var(--accent); color:#fff; cursor:pointer; margin-top:6px;
@@ -63,7 +56,6 @@
     display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px;
   }
   .success-title{font-size:20px; font-weight:600; margin-bottom:8px;}
-  .success-sku{font-family:ui-monospace,monospace; font-size:24px; font-weight:700; color:var(--accent); margin:14px 0;}
   .success-sub{font-size:14px; color:var(--ink-soft); margin-bottom:28px; line-height:1.5;}
   .new-btn{
     padding:13px 26px; font-size:15px; font-weight:500; border:1px solid var(--line); border-radius:10px;
@@ -104,7 +96,7 @@
       <p class="card-title">Top</p>
       <div class="field">
         <label>Colour <span class="req">*</span></label>
-        <select id="top-colour" onchange="buildSKU()">
+        <select id="top-colour">
           <option value="">Select…</option>
           <option>Beige</option><option>Black</option><option>Blue</option><option>Cream</option>
           <option>Golden</option><option>Green</option><option>Grey</option><option>Magenta</option>
@@ -116,7 +108,7 @@
       </div>
       <div class="field">
         <label>Fabric <span class="req">*</span></label>
-        <select id="top-fabric" onchange="buildSKU()">
+        <select id="top-fabric">
           <option value="">Select…</option>
           <option>Brocade</option><option>Chanderi</option><option>Chiffon</option><option>Cotton</option>
           <option>Cotton Silk</option><option>Crepe</option><option>Georgette</option><option>Kamkhab</option>
@@ -129,7 +121,7 @@
       <div class="row2">
         <div class="field">
           <label>Style <span class="req">*</span></label>
-          <select id="top-style" onchange="buildSKU()">
+          <select id="top-style">
             <option value="">Select…</option>
             <option>A Line</option><option>Angarkha</option><option>Anarkali</option><option>Blouse</option>
             <option>Frock</option><option>Gown</option><option>Kalidar</option><option>M High Neck</option>
@@ -180,7 +172,7 @@
       </div>
       <div class="field">
         <label>Style <span class="req">*</span></label>
-        <select id="bottom-style" onchange="buildSKU()">
+        <select id="bottom-style">
           <option value="">Select…</option>
           <option>Churidar</option><option>Farshi</option><option>Gharara</option><option>Gown</option>
           <option>Lancha</option><option>Lehenga</option><option>None</option><option>Palazzo</option>
@@ -221,7 +213,7 @@
       <p class="card-title">Ornamentation &amp; pattern</p>
       <div class="field">
         <label>Ornamentation <span class="req">*</span></label>
-        <select id="ornamentation" onchange="buildSKU()">
+        <select id="ornamentation">
           <option value="">Select…</option>
           <option>Aari</option><option>Applique</option><option>Cutwork</option><option>Gota</option>
           <option>Handwork</option><option>Kamdani</option><option>Patchwork</option><option>Resham Embroidery</option>
@@ -243,15 +235,6 @@
       </div>
     </div>
 
-    <div class="card">
-      <p class="card-title">Generated SKU</p>
-      <div class="sku-box">
-        <span class="sku-label">SKU</span>
-        <span class="sku-val" id="sku-display">—</span>
-      </div>
-      <div class="sku-note">Auto-generated from your selections. Save your photos in a folder with this exact name.</div>
-    </div>
-
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">Save product entry</button>
     <div class="sending" id="sendingMsg">Saving…</div>
 
@@ -260,9 +243,7 @@
   <div class="success-screen" id="successView">
     <div class="success-icon">✓</div>
     <div class="success-title">Product saved</div>
-    <div class="success-sku" id="success-sku-display"></div>
     <div class="success-sub">Save your photos to the folder:<br><strong id="success-folder"></strong></div>
-    <div class="success-sub" id="success-foldercode"></div>
     <button class="new-btn" onclick="resetForm()">Add another product</button>
   </div>
 
@@ -270,14 +251,6 @@
 
 <script>
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxRB4OxEFjw0sIOE13OtwDcepc9lF42vxPYzytfZiEchNS03M1T84Rf_UJir4aaYe2n/exec";
-
-const codes = {
-  colour:{Beige:'BG',Black:'BA',Blue:'BL',Cream:'CM',Golden:'GL',Green:'GN',Grey:'GR',Magenta:'MG',Maroon:'MR',Multicolour:'MC','Off White':'OW',Orange:'OR',Peach:'PC',Pink:'PK',Purple:'PR',Red:'RD',Rust:'RT',Taupe:'TP',White:'WH',Wine:'WN',Yellow:'YL'},
-  fabric:{Brocade:'BR',Chanderi:'CD',Chiffon:'CH',Cotton:'CT','Cotton Silk':'CS',Crepe:'CR',Georgette:'GR',Kamkhab:'KM',Linen:'LN',Maheshwari:'MW',Modal:'MO',Net:'NT',Organza:'OR',Satin:'SA',Silk:'SL','Staple Tussar':'ST',Tissue:'TS',Velvet:'VL'},
-  style:{'A Line':'AL',Angarkha:'AG',Anarkali:'AN',Blouse:'BL',Frock:'FR',Gown:'GN',Kalidar:'KL','M High Neck':'MH','M Kurta':'MK','M Pathan':'MP',Straight:'SR'},
-  bottom:{Churidar:'CS',Farshi:'FS',Gharara:'GH',Gown:'GN',Lancha:'LN',Lehenga:'LH',None:'#',Palazzo:'PS','Trousers Narrow':'TN','Trousers Straight':'TS'},
-  orn:{Aari:'AR',Applique:'AP',Cutwork:'CW',Gota:'GT',Handwork:'HW',Kamdani:'KD',Patchwork:'PW','Resham Embroidery':'RE','Resham Weave':'RW','Self Work':'SW',Tilla:'TL',Zardozi:'ZD','Zari Embroidery':'ZE','Zari Weave':'ZW'}
-};
 
 const state = { segment:null, sleeveLength:null, pattern:null };
 
@@ -290,20 +263,6 @@ function setToggle(key, val, el){
     const err = document.getElementById('err-segment');
     if(err) err.style.display = 'none';
   }
-}
-
-function buildSKU(){
-  const tc = document.getElementById('top-colour').value;
-  const tf = document.getElementById('top-fabric').value;
-  const ts = document.getElementById('top-style').value;
-  const bs = document.getElementById('bottom-style').value;
-  const orn = document.getElementById('ornamentation').value;
-  if(!tc || !tf || !ts || !bs || !orn){
-    document.getElementById('sku-display').textContent = '—';
-    return;
-  }
-  const sku = (codes.colour[tc]||'??') + (codes.fabric[tf]||'??') + (codes.style[ts]||'??') + (codes.bottom[bs]||'??') + (codes.orn[orn]||'??') + '1';
-  document.getElementById('sku-display').textContent = sku;
 }
 
 function validate(){
@@ -349,7 +308,6 @@ function collectPayload(){
 async function submitForm(){
   if(!validate()) return;
 
-  const sku = document.getElementById('sku-display').textContent;
   const payload = collectPayload();
   const btn = document.getElementById('submitBtn');
   const sending = document.getElementById('sendingMsg');
@@ -371,13 +329,11 @@ async function submitForm(){
 
   btn.disabled = false;
   sending.style.display = 'none';
-  showSuccess(sku, folderCode);
+  showSuccess(folderCode);
 }
 
-function showSuccess(sku, folderCode){
-  document.getElementById('success-sku-display').textContent = sku;
-  document.getElementById('success-folder').textContent = '/Photos/' + sku + '/';
-  document.getElementById('success-foldercode').textContent = folderCode ? ('✅ Folder code: ' + folderCode) : '';
+function showSuccess(folderCode){
+  document.getElementById('success-folder').textContent = folderCode ? ('/Photos/' + folderCode + '/') : '/Photos/(code unavailable)/';
   document.getElementById('formView').style.display = 'none';
   document.getElementById('successView').style.display = 'block';
 }
@@ -389,7 +345,6 @@ function resetForm(){
   document.getElementById('price').value = '';
   document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
   Object.keys(state).forEach(k => state[k] = null);
-  document.getElementById('sku-display').textContent = '—';
   document.querySelectorAll('.err-msg').forEach(e => e.style.display = 'none');
 }
 </script>
